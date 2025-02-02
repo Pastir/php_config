@@ -1,0 +1,5 @@
+{{ ansible_managed | comment(decoration='; ') }}
+
+{% for item in merged_php_ini %}
+{{ item.key }} = {{ item.value }}
+{% endfor %}

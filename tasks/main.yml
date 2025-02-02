@@ -1,0 +1,97 @@
+- name: Block upload cli php.ini
+  block:
+    - name: Merge of php ini(default) and php_ini defined in playbook
+      ansible.builtin.set_fact:
+        merged_php_ini: "{{ (__php_ini + cli_php_ini | default([])) | map('dict2items') | flatten | items2dict | dict2items }}"
+
+    # upload cli php.ini
+    - name: Upload cli php.ini
+      ansible.builtin.template:
+        src: templates/php.ini.j2
+        dest: "{{ php_conf_cli_dir | default(__php_conf_cli_dir) }}/php.ini"
+        owner: root
+        group: root
+        mode: '0644'
+
+  tags: cli_php_ini
+
+- name: Block upload fpm php.ini
+  block:
+    - name: Merge of php ini(default) and php_ini defined in playbook
+      ansible.builtin.set_fact:
+        merged_php_ini: "{{ (__php_ini + fpm_php_ini | default([])) | map('dict2items') | flatten | items2dict | dict2items }}"
+
+    # upload fmp php.ini
+    - name: Upload cli php.ini
+      ansible.builtin.template:
+        src: templates/php.ini.j2
+        dest: "{{ php_conf_fpm_dir | default(__php_conf_fpm_dir) }}/php.ini"
+        owner: root
+        group: root
+        mode: '0644'
+
+  tags: fpm_php_ini
+
+- name: Block upload php-fpm.conf
+  block:
+    - name: Merge of php ini(default) and php_ini defined in playbook
+      ansible.builtin.set_fact:
+        merged_fpm_conf: "{{ (__fpm_conf + fpm_conf | default([])) | map('dict2items') | flatten | items2dict | dict2items }}"
+
+    # upload fmp php.ini
+    - name: Upload cli php.ini
+      ansible.builtin.template:
+        src: templates/php-fpm.conf.j2
+        dest: "{{ php_conf_fpm_dir | default(__php_conf_fpm_dir) }}/php-fpm.conf"
+        owner: root
+        group: root
+        mode: '0644'
+
+  tags: php_fpm_conf
+
+- name: Block upload $pool.conf
+  block:
+    - name: Initialize merged_pools
+      set_fact:
+        merged_pools: "{{ __fpm_pools }}"
+
+    - name: Merge fpm_pools into merged_pools
+      set_fact:
+        merged_pools: >-
+          {{
+            merged_pools | map('combine', 
+              fpm_pools | selectattr('name', 'equalto', item.name) | first | default({})
+            ) | list
+          }}
+      loop: "{{ merged_pools }}"
+      loop_control:
+        loop_var: item
+
+    - name: Handle pm.mode condition
+      set_fact:
+        merged_pools: >-
+          {{
+            merged_pools | map('combine', 
+              {
+                'pm': (fpm_pools | selectattr('name', 'equalto', item.name) | first | default({})).pm
+              }
+            ) | list
+          }}
+      loop: "{{ merged_pools }}"
+      loop_control:
+        loop_var: item
+      when: >-
+        item.pm.mode != (fpm_pools | selectattr('name', 'equalto', item.name) | first | default({})).pm.mode
+
+    - name: Upload $pool.conf
+      ansible.builtin.template:
+       src: templates/pool.conf.j2
+       dest: "{{ php_conf_fpm_pool_dir | default(__php_conf_fpm_pool_dir) }}/{{ item.name }}.conf"
+       owner: root
+       group: root
+       mode: '0644'
+      loop: "{{ merged_pools }}"
+      loop_control:
+        loop_var: item
+
+  tags: fpm_pools_conf

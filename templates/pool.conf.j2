@@ -1,0 +1,120 @@
+{{ ansible_managed | comment(decoration='; ') }}
+
+; {{ item.name }} - PHP-FPM Pool Configuration
+[{{ item.name }}]
+
+; Pool user and group
+user = {{ item.user }}
+group = {{ item.group }}
+
+; Listen settings
+listen = {{ item.listen }}
+{% if item.listen_params is defined %}
+{% for key, value in item.listen_params.items() %}
+listen.{{ key }} = {{ value }}
+{% endfor %}
+{% endif %}
+
+; Process manager settings
+{% if item.pm is defined %}
+{% for key, value in item.pm.items() %}
+{% if key == "mode" %}
+pm = {{ value }}
+{% else %}
+pm.{{ key }} = {{ value }}
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if item.ping is defined %}
+; Ping settings
+{% for key, value in item.ping.items() %}
+ping.{{ key }} = {{ value }}
+{% endfor %}
+{% endif %}
+
+{% if item.process is defined %}
+; Process settings
+{% for key, value in item.process.items() %}
+process.{{ key }} = {{ value }}
+{% endfor %}
+{% endif %}
+
+{% if item.logs is defined %}
+; Logging settings
+{% for key, value in item.logs.items() %}
+{{ key }} = {{ value }}
+{% endfor %}
+{% endif %}
+
+{% if item.access is defined %}
+{% for key, value in item.access.items() %}
+access.{{ key }} = {{ value }}
+{% endfor %}
+{% endif %}
+
+{% if item.security is defined %}
+; Security settings
+{% for key, value in item.security.items() %}
+security.{{ key }} = {{ value }}
+{% endfor %}
+{% endif %}
+
+{% if item.prefix is defined %}
+prefix = {{ item.prefix }}
+{% endif %}
+{% if item.request_terminate_timeout is defined %}
+request_terminate_timeout = {{ item.request_terminate_timeout }}
+{% endif %}
+{% if item.request_terminate_timeout_track_finished is defined %}
+request_terminate_timeout_track_finished = {{ item.request_terminate_timeout_track_finished }}
+{% endif %}
+{% if item.request_slowlog_trace_depth is defined %}
+request_slowlog_trace_depth = {{ item.request_slowlog_trace_depth }}
+{% endif %}
+{% if item.rlimit_files is defined %}
+rlimit_files = {{ item.rlimit_files }}
+{% endif %}
+{% if item.rlimit_core is defined %}
+rlimit_core = {{ item.rlimit_core }}
+{% endif %}
+{% if item.chroot is defined %}
+chroot = {{ item.chroot }}
+{% endif %}
+{% if item.chdir is defined %}
+chdir = {{ item.chdir }}
+{% endif %}
+{% if item.apparmor_hat is defined %}
+apparmor_hat = {{ item.apparmor_hat }}
+{% endif %}
+{% if item.catch_workers_output is defined %}
+catch_workers_output = {{ item.catch_workers_output }}
+{% endif %}
+{% if item.decorate_workers_output is defined %}
+decorate_workers_output = {{ item.decorate_workers_output }}
+{% endif %}
+{% if item.clear_env is defined %}
+clear_env = {{ item.clear_env }}
+{% endif %}
+
+{% if item.php_admin_value is defined %}
+; PHP settings
+{% for key, value in item.php_admin_value.items() %}
+php_admin_value[{{ key }}] = {{ value }}
+{% endfor %}
+{% endif %}
+{% if item.php_admin_flag is defined %}
+{% for key, value in item.php_admin_flag.items() %}
+php_admin_flag[{{ key }}] = {{ value }}
+{% endfor %}
+{% endif %}
+{% if item.php_value is defined %}
+{% for key, value in item.php_value.items() %}
+php_value[{{ key }}] = {{ value }}
+{% endfor %}
+{% endif %}
+{% if item.php_flag is defined %}
+{% for key, value in item.php_flag.items() %}
+php_flag[{{ key }}] = {{ value }}
+{% endfor %}
+{% endif %}

@@ -1,0 +1,23 @@
+galaxy_info:
+  author: Ivan Pastir
+  description: php configuration, php.ini php-fpm.con and pool
+  license: Apache License, Version 2.0
+
+  min_ansible_version: '2.9'
+  platforms:
+    - name: Ubuntu
+      versions:
+        - xenial
+        - bionic
+        - focal
+        - jammy
+
+  galaxy_tags:
+    - php
+    - php-fpm
+    - web
+    - server
+    - development
+    - configuration
+
+dependencies: []

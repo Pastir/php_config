@@ -1,0 +1,7 @@
+{{ ansible_managed | comment(decoration='; ') }}
+
+[global]
+
+{% for item in merged_fpm_conf %}
+{{ item.key }}={{ item.value }}
+{% endfor %}
