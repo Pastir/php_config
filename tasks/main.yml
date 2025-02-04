@@ -22,7 +22,7 @@
         merged_php_ini: "{{ (__php_ini + fpm_php_ini | default([])) | map('dict2items') | flatten | items2dict | dict2items }}"
 
     # upload fmp php.ini
-    - name: Upload cli php.ini
+    - name: Upload fpm php.ini
       ansible.builtin.template:
         src: templates/php.ini.j2
         dest: "{{ php_conf_fpm_dir | default(__php_conf_fpm_dir) }}/php.ini"
@@ -39,7 +39,7 @@
         merged_fpm_conf: "{{ (__fpm_conf + fpm_conf | default([])) | map('dict2items') | flatten | items2dict | dict2items }}"
 
     # upload fmp php.ini
-    - name: Upload cli php.ini
+    - name: Upload fpm php.ini
       ansible.builtin.template:
         src: templates/php-fpm.conf.j2
         dest: "{{ php_conf_fpm_dir | default(__php_conf_fpm_dir) }}/php-fpm.conf"
