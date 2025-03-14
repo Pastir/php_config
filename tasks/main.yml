@@ -1,3 +1,9 @@
+- name: Create a directory logs
+  ansible.builtin.file:
+    path: "{{ php_logs_fpm_dir | default(__php_logs_fpm_dir) }}"
+    state: directory
+    mode: '0755'
+
 - name: Block upload cli php.ini
   block:
     - name: Merge of php ini(default) and php_ini defined in playbook
@@ -46,17 +52,18 @@
         owner: root
         group: root
         mode: '0644'
+      notify: Restart php-fpm
 
   tags: php_fpm_conf
 
 - name: Block upload $pool.conf
   block:
     - name: Initialize merged_pools
-      set_fact:
+      ansible.builtin.set_fact:
         merged_pools: "{{ __fpm_pools }}"
 
     - name: Merge fpm_pools into merged_pools
-      set_fact:
+      ansible.builtin.set_fact:
         merged_pools: >-
           {{
             merged_pools | map('combine', 
@@ -68,7 +75,7 @@
         loop_var: item
 
     - name: Handle pm.mode condition
-      set_fact:
+      ansible.builtin.set_fact:
         merged_pools: >-
           {{
             merged_pools | map('combine', 
@@ -93,5 +100,5 @@
       loop: "{{ merged_pools }}"
       loop_control:
         loop_var: item
-
+      notify: Restart php-fpm
   tags: fpm_pools_conf

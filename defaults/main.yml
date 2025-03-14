@@ -71,7 +71,7 @@ __php_ini:
 
 __fpm_conf:
   - pid: "/run/php/php{{ php_version }}-fpm.pid"
-  - error_log: "/var/log/php{{ php_version }}-fpm.log"
+  - error_log: "{{ php_logs_fpm_dir | default(__php_logs_fpm_dir) }}{{ php_version | default(__php_version) }}-fpm.log"
   - include: "/etc/php/{{ php_version }}/fpm/pool.d/*.conf"
 
 __fpm_pools:

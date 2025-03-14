@@ -1,7 +1,9 @@
 # vars file for pastir.php_config
 __php_version: "8.1"
+__php_service: "php{{ __php_version }}-fpm.service"
 __php_conf_dir: "/etc/php/{{ __php_version }}"
 __php_conf_cli_dir: "{{ __php_conf_dir }}/cli"
 __php_conf_fpm_dir: "{{ __php_conf_dir }}/fpm"
 __php_conf_fpm_pool_dir: "{{ __php_conf_fpm_dir }}/pool.d"
 __php_conf_fpm_file: "{{ __php_conf_fmp_dir }}/php-fpm.conf"
+__php_logs_fpm_dir: "/var/log/php"

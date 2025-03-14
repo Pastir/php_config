@@ -8,11 +8,13 @@ Role Variables
 
 ```
 php_version: "8.1"
+php_service: "php{{ php_version }}-fpm.service"
 php_conf_dir: "/etc/php/{{ __php_version }}"
 php_conf_cli_dir: "{{ __php_conf_dir }}/cli"
 php_conf_fmp_dir: "{{ __php_conf_dir }}/fpm"
 php_conf_fpm_pool_dir: "{{ __php_conf_fpm_dir }}/pool.d"
 php_conf_fpm_file: "{{ __php_conf_fpm_dir }}/php-fpm.conf"
+php_logs_fpm_dir: "/var/log/php"
 
 ```
 
