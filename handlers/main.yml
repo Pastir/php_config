@@ -1,4 +1,4 @@
 - name: Restart php-fpm
   ansible.builtin.systemd_service:
     state: restarted
-    name: "{{ php_service | default(__php_service) }}"
+    name: "{{ php_fpm_service | default(__php_fpm_service) }}"
